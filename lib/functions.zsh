@@ -18,7 +18,16 @@ function open_command() {
 
   # define the open command
   case "$OSTYPE" in
-    darwin*)  open_cmd='open' ;;
+    darwin*)  
+              # Because Arc will open a Little Arc browser over the iTerm window,
+              # we don't want the open command to bring the application to the
+              # foreground.
+              if [[ "$1" = (http|https)://* ]] then;
+                open_cmd='open -g'
+              else
+                open_cmd='open'
+              fi
+              ;;
     cygwin*)  open_cmd='cygstart' ;;
     linux*)   [[ "$(uname -r)" != *icrosoft* ]] && open_cmd='nohup xdg-open' || {
                 open_cmd='cmd.exe /c start ""'
